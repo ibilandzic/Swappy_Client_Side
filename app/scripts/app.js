@@ -83,17 +83,6 @@ angular.module('confusionApp', ['ui.router','ngResource','ngDialog', 'lbServices
                     }
                 }
             })
-        
-            // route for the contactus page
-            .state('app.contactus', {
-                url:'contactus',
-                views: {
-                    'content@': {
-                        templateUrl : 'views/contactus.html',
-                        controller  : 'ContactController'                  
-                    }
-                }
-            })
 
             .state('app.favorites', {
                 url: 'favorites',

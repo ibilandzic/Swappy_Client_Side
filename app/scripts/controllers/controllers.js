@@ -2,58 +2,7 @@
 
 angular.module('confusionApp')
 
-.controller('MenuController', ['$scope', '$rootScope', 'Dishes', 'Favorites', function ($scope, $rootScope, Dishes, Favorites) {
 
-    $scope.tab = 1;
-    $scope.filtText = '';
-    $scope.showDetails = false;
-    $scope.showFavorites = false;
-    $scope.showMenu = false;
-    $scope.message = "Loading ...";
-
-    Dishes.find()
-        .$promise.then(
-        function (response) {
-            $scope.dishes = response;
-            $scope.showMenu = true;
-
-        },
-        function (response) {
-            $scope.message = "Error: " + response.status + " " + response.statusText;
-            
-        });
-
-    $scope.select = function (setTab) {
-        $scope.tab = setTab;
-
-        if (setTab === 2) {
-            $scope.filtText = "appetizer";
-        } else if (setTab === 3) {
-            $scope.filtText = "mains";
-        } else if (setTab === 4) {
-            $scope.filtText = "dessert";
-        } else {
-            $scope.filtText = "";
-        }
-    };
-
-    $scope.isSelected = function (checkTab) {
-        return ($scope.tab === checkTab);
-    };
-
-    $scope.toggleDetails = function () {
-        $scope.showDetails = !$scope.showDetails;
-    };
-
-    $scope.toggleFavorites = function () {
-        $scope.showFavorites = !$scope.showFavorites;
-    };
-    
-    $scope.addToFavorites = function(dishid) {
-        Favorites.create({customerId: $rootScope.currentUser.id, dishesId: dishid});
-        $scope.showFavorites = !$scope.showFavorites;
-    };
-}])
 
 
 .controller('MyAdsController', ['$scope','$state', '$rootScope', 'Item','Favorites', function ($scope,$state, $rootScope, Item, Favorites) {
@@ -594,94 +543,7 @@ angular.module('confusionApp')
    
 }])
 
-//TODO add girls and boys controller
 
-.controller('ContactController', ['$scope', function ($scope) {
-
-    $scope.feedback = {
-        mychannel: "",
-        firstName: "",
-        lastName: "",
-        agree: false,
-        email: ""
-    };
-
-    var channels = [{
-        value: "tel",
-        label: "Tel."
-    }, {
-        value: "Email",
-        label: "Email"
-    }];
-
-    $scope.channels = channels;
-    $scope.invalidChannelSelection = false;
-
-    $scope.sendFeedback = function () {
-
-
-        if ($scope.feedback.agree && ($scope.feedback.mychannel == "")) {
-            $scope.invalidChannelSelection = true;
-        } else {
-            $scope.invalidChannelSelection = false;
-            // feedbackFactory.save($scope.feedback);
-            $scope.feedback = {
-                mychannel: "",
-                firstName: "",
-                lastName: "",
-                agree: false,
-                email: ""
-            };
-            $scope.feedback.mychannel = "";
-            $scope.feedbackForm.$setPristine();
-        }
-    };
-}])
-
-.controller('DishDetailController', ['$scope', '$rootScope', '$state', '$stateParams', 'Dishes', 'Comments', function ($scope, $rootScope, $state, $stateParams, Dishes, Comments) {
-
-    $scope.dish = {};
-    $scope.showDish = false;
-    $scope.message = "Loading ...";
-
-    $scope.dish = Dishes.findById({id: $stateParams.id})
-        .$promise.then(
-            function (response) {
-                $scope.dish = response;
-                $scope.showDish = true;
-                $scope.dish.comments = Dishes.comments({
-                    id: $stateParams.id,
-                    "filter":{"include":["customer"]}});
-            },
-            function (response) {
-                $scope.message = "Error: " + response.status + " " + response.statusText;
-            }
-        );
-
-    $scope.mycomment = {
-        rating: 5,
-        comment: "",
-        dishesId: $stateParams.id,
-    };
-
-    $scope.submitComment = function () {
-        
-        if ($rootScope.currentUser)
-            $scope.mycomment.customerId = $rootScope.currentUser.id;
-
-        Comments.create($scope.mycomment);
-
-        $state.go($state.current, {}, {reload: true});
-        
-        $scope.commentForm.$setPristine();
-
-        $scope.mycomment = {
-            rating: 5,
-            comment: "",
-            dishesId: $stateParams.id,
-        };
-    }
-}])
 
 
 .controller('NewAdController', ['$scope', '$rootScope', '$state', '$stateParams', 'Item','ItemType','ItemSize','Item_state','Accounts','Favorites','$window', function ($scope, $rootScope, $state, $stateParams, Item,ItemType,ItemSize,Item_state,Accounts,Favorites,$window) {
